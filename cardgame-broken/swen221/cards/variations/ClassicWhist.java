@@ -4,9 +4,13 @@
 package swen221.cards.variations;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import swen221.cards.core.Card;
+import swen221.cards.core.CardGame;
 import swen221.cards.core.Player;
+import swen221.cards.core.Trick;
 import swen221.cards.util.AbstractCardGame;
 
 /**
@@ -21,7 +25,19 @@ public class ClassicWhist extends AbstractCardGame {
 	 * Construct a new game of classic whist.
 	 */
 	public ClassicWhist() {
+	}
+	public ClassicWhist(Map<Player.Direction, Player> players, Map<Player.Direction,Integer> tricks,
+						Map<Player.Direction,Integer> scores, Card.Suit trumps, Trick currentTrick) {
+		super(players, tricks, scores, trumps, currentTrick);
+	}
 
+	@Override
+	public CardGame getCardCopyNewConstructor(Map<Player.Direction, Player> players,
+											  Map<Player.Direction, Integer> tricks,
+											  Map<Player.Direction, Integer> scores,
+											  Card.Suit trumps, Trick currentTrick) {
+
+		return new ClassicWhist(players, tricks, scores, trumps, currentTrick);
 	}
 
 	@Override

@@ -4,12 +4,10 @@
 package swen221.cards.variations;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import swen221.cards.core.Card;
-import swen221.cards.core.IllegalMove;
-import swen221.cards.core.Player;
-import swen221.cards.core.Trick;
+import swen221.cards.core.*;
 import swen221.cards.core.Player.Direction;
 import swen221.cards.util.AbstractCardGame;
 
@@ -26,6 +24,20 @@ public class SingleHandWhist extends AbstractCardGame {
 	 */
 	public SingleHandWhist() {
 
+	}
+
+	public SingleHandWhist(Map<Player.Direction, Player> players, Map<Player.Direction,Integer> tricks,
+						Map<Player.Direction,Integer> scores, Card.Suit trumps, Trick currentTrick) {
+		super(players, tricks, scores, trumps, currentTrick);
+	}
+
+	@Override
+	public CardGame getCardCopyNewConstructor(Map<Direction, Player> players,
+											  Map<Direction, Integer> tricks,
+											  Map<Direction, Integer> scores,
+											  Card.Suit trumps, Trick currentTrick) {
+
+		return new SingleHandWhist(players, tricks, scores, trumps, currentTrick);
 	}
 
 	@Override

@@ -4,6 +4,7 @@
 package swen221.cards.core;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,6 +30,12 @@ public class Trick {
 	public Trick(Player.Direction lead, Card.Suit trumps) {
 		this.lead = lead;
 		this.trumps = trumps;
+	}
+
+	public Trick(Player.Direction lead, Card.Suit trumps, Card[] cards) {
+		this.cards = cards;
+		this.trumps = trumps;
+		this.lead = lead;
 	}
 
 	/**
@@ -166,5 +173,15 @@ public class Trick {
 				break;
 			}
 		}
+	}
+	public Trick copy() {
+		Card[] cardsCopy = new Card[4];
+		for(int i=0; i<4; i++) {
+			if(cards[i] != null) {
+				Card copy = cards[i].copy();
+				cardsCopy[i] = copy;
+			}
+		}
+		return new Trick(this.lead, this.trumps, cardsCopy);
 	}
 }

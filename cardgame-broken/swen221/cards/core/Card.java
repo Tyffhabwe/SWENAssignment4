@@ -134,4 +134,8 @@ public class Card implements Comparable<Card> {
 	public int hashCode() {
 		return Objects.hash(rank, suit);
 	}
+
+	public Card copy() {
+		return new Card(suit, rank);
+	}
 }

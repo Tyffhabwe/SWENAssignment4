@@ -4,6 +4,7 @@
 package swen221.cards.util;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import swen221.cards.core.*;
 import swen221.cards.core.Player.Direction;
@@ -22,20 +23,20 @@ public abstract class AbstractCardGame implements CardGame {
 	/**
 	 * A map of positions around the table to the players in the game.
 	 */
-	protected final Map<Player.Direction, Player> players = new HashMap<>();
+	protected Map<Player.Direction, Player> players = new HashMap<>();
 
 	/**
 	 * Keeps track of the number of tricks each player has won in the current
 	 * round.
 	 */
-	protected final Map<Player.Direction,Integer> tricks = new HashMap<>();
+	protected Map<Player.Direction,Integer> tricks = new HashMap<>();
 
 	/**
 	 * Keeps track of the player scores. In some games, this may equal the number
 	 * of tricks. In others, this may include certain bonuses that were
 	 * obtained.
 	 */
-	protected final Map<Player.Direction,Integer> scores = new HashMap<>();
+	protected Map<Player.Direction,Integer> scores = new HashMap<>();
 
 	/**
 	 * Keep track of which suit is currently trumps. Here, "null" may be used to
@@ -59,6 +60,14 @@ public abstract class AbstractCardGame implements CardGame {
 			scores.put(d, 0);
 		}
 	}
+	public AbstractCardGame(Map<Player.Direction, Player> players, Map<Player.Direction,Integer> tricks,
+							Map<Player.Direction,Integer> scores, Card.Suit trumps, Trick currentTrick) {
+		this.players = players;
+		this.tricks = tricks;
+		this.scores = scores;
+		this.trumps = trumps;
+		this.currentTrick = currentTrick;
+	}
 
 	// ========================================================
 	// Methods required for Cloneable
@@ -70,12 +79,29 @@ public abstract class AbstractCardGame implements CardGame {
 		// java.lang.Object. This creates a shallow copy of the card game. For
 		// Part 3 of the assignment, you need to reimplement this to perform a
 		// deep clone.
-		try {
-			return (CardGame) super.clone();
-		} catch(CloneNotSupportedException e) {
-			return null; // dead code
+
+		Map<Player.Direction, Player> playersCopy = players.keySet().stream()
+				.collect(Collectors.toMap(dir -> dir,
+						dir -> players.get(dir).copy()));
+
+		Map<Player.Direction,Integer> tricksCopy = tricks.keySet().stream()
+				.collect(Collectors.toMap(dir -> dir, dir -> tricks.get(dir)));
+
+		Map<Player.Direction,Integer> scoresCopy = scores.keySet().stream()
+				.collect(Collectors.toMap(dir -> dir, dir -> scores.get(dir)));
+
+		Trick trickCopy = currentTrick;
+
+		if(currentTrick != null) {
+			trickCopy = currentTrick.copy();
 		}
+
+		return this.getCardCopyNewConstructor(playersCopy, tricksCopy, scoresCopy, trumps, trickCopy);
 	}
+	abstract public CardGame getCardCopyNewConstructor(Map<Player.Direction, Player> players,
+										  Map<Player.Direction,Integer> tricks,
+										  Map<Player.Direction,Integer> scores,
+										  Card.Suit trumps, Trick currentTrick);
 
 	// ========================================================
 	// Methods required for CardGame

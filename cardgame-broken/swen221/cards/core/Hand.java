@@ -4,6 +4,7 @@
 package swen221.cards.core;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Represents a hand of cards held by a player. As the current round proceeds,
@@ -15,7 +16,6 @@ import java.util.*;
  */
 public class Hand implements Cloneable, Iterable<Card> {
 	private SortedSet<Card> cards = new TreeSet<>();
-
 
 	@Override
 	public Iterator<Card> iterator() {
@@ -48,8 +48,10 @@ public class Hand implements Cloneable, Iterable<Card> {
 		}
 		return r;
 	}
-
-
+	public Hand(){}
+	public Hand(SortedSet<Card> cards) {
+		this.cards = cards;
+	}
 	/**
 	 * Add a card to the hand.
 	 * @param card The card to be added.
@@ -80,5 +82,13 @@ public class Hand implements Cloneable, Iterable<Card> {
 	 */
 	public void clear() {
 		cards.clear();
+	}
+	public Hand copy() {
+		SortedSet<Card> cardsCopy = new TreeSet<>();
+
+		for(Card c: cards) {
+			cardsCopy.add(c.copy());
+		}
+		return new Hand(cardsCopy);
 	}
 }

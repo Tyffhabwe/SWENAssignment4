@@ -75,7 +75,10 @@ public class Player {
 		this.direction = direction;
 		this.hand = new Hand();
 	}
-
+	public Player(Direction direction, Hand hand) {
+		this.direction = direction;
+		this.hand = hand;
+	}
 	/**
 	 * Get the position in which this player is sitting.
 	 *
@@ -92,5 +95,8 @@ public class Player {
 	 */
 	public Hand getHand() {
 		return hand;
+	}
+	public Player copy() {
+		return new Player(this.direction, this.hand.copy());
 	}
 }
