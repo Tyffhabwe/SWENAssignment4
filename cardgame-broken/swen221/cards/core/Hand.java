@@ -4,7 +4,6 @@
 package swen221.cards.core;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Represents a hand of cards held by a player. As the current round proceeds,
@@ -83,6 +82,66 @@ public class Hand implements Cloneable, Iterable<Card> {
 	public void clear() {
 		cards.clear();
 	}
+
+	/**
+	 * Method to get the highest rank Card in the deck
+	 * FIXME edit to fix for trump suit
+	 */
+	public Card getBestCardInHand(Card.Suit trumps, boolean isLeader) {
+		if(this.containsSuit(trumps)) {
+			return this.getHighestCardInSuit(trumps);
+		}
+		if(isLeader) {
+			Card.Rank maxRank = cards.stream().max(Comparator.comparing(Card::rank)).get().rank();
+			return cards.stream().filter(card -> card.rank().equals(maxRank))
+					.max(Card::compareTo).get();
+		}
+		return cards.stream().max(Card::compareTo).get();
+	}
+
+	/**
+	 * Method to get highest Card in specific suit
+	 */
+	public Card getHighestCardInSuit(Card.Suit s) {
+		return cards.stream().filter(card -> card.suit().equals(s))
+				.max(Card::compareTo).get();
+	}
+	/**
+	 * Method to conservatively get the lowest card above given card
+	 */
+	public Card getHighestCardHigherThan(Card toBeat) {
+		return cards.stream().filter(card -> card.compareTo(toBeat) > 0)
+				.min(Card::compareTo).get();
+	}
+	/**
+	 * Method to get lowest Card in specific suit
+	 */
+	public Card getLowestCardInSuit(Card.Suit s) {
+		return cards.stream().filter(card -> card.suit().equals(s))
+				.min(Card::compareTo).get();
+	}
+
+	/**
+	 * Method to get lowest Card in the deck.
+	 */
+	public Card getWorstCardInHand(Card.Suit trumps) {
+		return cards.stream().min(Card::compareTo).get();
+	}
+	/**
+	 * Method to check if in the current hand there is a Card of the same suit higher than arg
+	 */
+	public boolean maxOfSameSuitInHandHigherThan(Card s) {
+		Card max = this.getHighestCardInSuit(s.suit());
+		return max.compareTo(s) > 0;
+	}
+
+	/**
+	 * Check that there is a specific suit in the current hand
+	 */
+	public boolean containsSuit(Card.Suit s) {
+		return cards.stream().anyMatch(card -> card.suit().equals(s));
+	}
+	/** Helper method to copy (create a new instance) of this hand class but identical */
 	public Hand copy() {
 		SortedSet<Card> cardsCopy = new TreeSet<>();
 

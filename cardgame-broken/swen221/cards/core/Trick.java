@@ -6,6 +6,8 @@ package swen221.cards.core;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * Represents a trick being played. This includes the cards that have been
@@ -55,6 +57,44 @@ public class Trick {
 	 */
 	public Card.Suit getTrumps() {
 		return trumps;
+	}
+
+	/**
+	 * Get the current lead Suit
+	 */
+	public Card.Suit getLeadSuit() {
+		if(cards[0] != null) {
+			return cards[0].suit();
+		}
+		return null;
+	}
+
+	/**
+	 * Method to check if the trump suit has been played
+	 */
+	public boolean trumpSuitHasBeenPlayed() {
+		for(int i=0; i<4; i++) {
+			Card currentCard = cards[i];
+			if(currentCard != null) {
+				if(currentCard.suit().equals(trumps)) return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Method to check if this is the final move to be made
+	 */
+	public boolean thisIsTheFinalMove() {
+		return cards[2] != null;
+	}
+	/**
+	 * Method to get me the highest card of a specific suit played in the trick
+	 */
+	public Card getHighestCardOfSuit(Card.Suit s) {
+		return Stream.of(cards).filter(Objects::nonNull)
+				.filter(card -> card.suit().equals(s))
+				.max(Card::compareTo).orElse(new Card(s, Card.Rank.TWO));
 	}
 
 	/**
@@ -133,6 +173,14 @@ public class Trick {
 			player = player.next();
 		}
 		return winningPlayer;
+	}
+
+	/**
+	 * Method to find the highest card in this Trick
+	 */
+	public Card getHighestCardInTrickOfSuit(Card.Suit s) {
+		return Arrays.stream(cards).filter(card -> card.suit().equals(s))
+				.min(Card::compareTo).get();
 	}
 
 	/**
